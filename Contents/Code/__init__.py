@@ -20,22 +20,26 @@ import binascii
 
 ####################################################################################################
 
+def L(string):
+  local_string = Locale.LocalString(string)
+  return str(local_string).decode()
+
 def Start():
   #HTTP.CacheTime = CACHE_1WEEK
-  pass
+  Locale.DefaultLocale = Prefs["language"].split("/")[1]
 
 @handler(PREFIX, NAME)
 def main():
   dir = ObjectContainer(title1="Subsonic")
-  dir.add(DirectoryObject(title="Dossiers", key = PREFIX + '/getFolders', thumb=R(FOLDER)))
-  dir.add(DirectoryObject(title="Genres", key = PREFIX + '/getGenres', thumb=R(FOLDER)))
-  dir.add(DirectoryObject(title="Aleatoire", key = PREFIX + '/getAlbumList/random/Aleatoire', thumb=R(FOLDER)))
-  dir.add(DirectoryObject(title="Nouveaux", key = PREFIX + '/getAlbumList/newest/Nouveaux', thumb=R(FOLDER)))
-  dir.add(DirectoryObject(title="Mieux note", key = PREFIX + '/getAlbumList/highest/Mieux note', thumb=R(FOLDER)))
-  dir.add(DirectoryObject(title="Plus joue", key = PREFIX + '/getAlbumList/frequent/Plus joue', thumb=R(FOLDER)))
-  dir.add(DirectoryObject(title="Recemment joues", key = PREFIX + '/getAlbumList/recent/Recemment joues', thumb=R(FOLDER)))
-  dir.add(DirectoryObject(title="Playlists", key = PREFIX + '/getPlaylists', thumb=R(FOLDER)))
-  dir.add(DirectoryObject(title="Tous les artistes", key = PREFIX + '/getArtists', thumb=R(FOLDER)))
+  dir.add(DirectoryObject(title=L("menu_folders"), key = PREFIX + '/getFolders', thumb=R(FOLDER)))
+  dir.add(DirectoryObject(title=L("menu_styles"), key = PREFIX + '/getGenres', thumb=R(FOLDER)))
+  dir.add(DirectoryObject(title=L("menu_random"), key = PREFIX + '/getAlbumList/random/menu_random', thumb=R(FOLDER)))
+  dir.add(DirectoryObject(title=L("menu_newest"), key = PREFIX + '/getAlbumList/newest/menu_newest', thumb=R(FOLDER)))
+  dir.add(DirectoryObject(title=L("menu_highest"), key = PREFIX + '/getAlbumList/highest/menu_highest', thumb=R(FOLDER)))
+  dir.add(DirectoryObject(title=L("menu_frequent"), key = PREFIX + '/getAlbumList/frequent/menu_frequent', thumb=R(FOLDER)))
+  dir.add(DirectoryObject(title=L("menu_recent"), key = PREFIX + '/getAlbumList/recent/menu_recent', thumb=R(FOLDER)))
+  dir.add(DirectoryObject(title=L("menu_playlists"), key = PREFIX + '/getPlaylists', thumb=R(FOLDER)))
+  dir.add(DirectoryObject(title=L("menu_artists"), key = PREFIX + '/getArtists', thumb=R(FOLDER)))
 
   #add preferences option
   dir.add(PrefsObject(title="Preferences"))
@@ -44,8 +48,8 @@ def main():
 @route(PREFIX + '/getPlaylists')
 def getPlaylists():
   if not serverStatus():
-    return ObjectContainer(header="Can't Connect", message="Check that your username, password and server address are entered correctly.")
-  dir = ObjectContainer(title1="Playlists")
+    return ObjectContainer(header=L("msg_connect_head"), message=L("msg_connext_body"))
+  dir = ObjectContainer(title1=L("oc_title_playlists"))
   element = XML.ElementFromURL(makeURL("getPlaylists.view"), cacheTime=CACHE_INTERVAL)
   #add all artists
   for item in searchElementTree(element, "{http://subsonic.org/restapi}playlist"):
@@ -70,7 +74,7 @@ def getPlaylist(playlistID):
   elif container == 'aac':
     audio_codec = AudioCodec.AAC
   if not serverStatus():
-    return ObjectContainer(header="Can't Connect", message="Check that your username, password and server address are entered correctly.")
+    return ObjectContainer(header=L("msg_connect_head"), message=L("msg_connext_body"))
   element = XML.ElementFromURL(makeURL("getPlaylist.view", id=playlistID), cacheTime=CACHE_INTERVAL)
   pl_title = "Playlist: " + element.xpath('./media:playlist/@name', namespaces=NS)[0]
   dir = ObjectContainer(title1=pl_title)
@@ -111,8 +115,8 @@ def getPlaylist(playlistID):
 @route(PREFIX + '/getAlbumList/{listType}/{title}')
 def getAlbumList(listType, title):
   if not serverStatus():
-    return ObjectContainer(header="Can't Connect", message="Check that your username, password and server address are entered correctly.")
-  dir = ObjectContainer(title1=title)
+    return ObjectContainer(header=L("msg_connect_head"), message=L("msg_connext_body"))
+  dir = ObjectContainer(title1=L(title))
   element = XML.ElementFromURL(makeURL("getAlbumList.view", type=listType, size="50"), cacheTime=CACHE_INTERVAL)
   #add all artists
   for item in searchElementTree(element, "{http://subsonic.org/restapi}album"):
@@ -133,8 +137,8 @@ def getAlbumList(listType, title):
 @route(PREFIX + '/getGenres')
 def getGenres():
   if not serverStatus():
-    return ObjectContainer(header="Can't Connect", message="Check that your username, password and server address are entered correctly.")
-  dir = ObjectContainer(title1="Genres")
+    return ObjectContainer(header=L("msg_connect_head"), message=L("msg_connext_body"))
+  dir = ObjectContainer(title1=L("oc_title_styles"))
   element = XML.ElementFromURL(makeURL("getGenres.view"), cacheTime=CACHE_INTERVAL)
   #add all artists
   for item in searchElementTree(element, "{http://subsonic.org/restapi}genre"):
@@ -153,8 +157,8 @@ def getSongsByGenre(genre):
   elif container == 'aac':
     audio_codec = AudioCodec.AAC
   if not serverStatus():
-    return ObjectContainer(header="Can't Connect", message="Check that your username, password and server address are entered correctly.")
-  dir = ObjectContainer(title1="Genres")
+    return ObjectContainer(header=L("msg_connect_head"), message=L("msg_connext_body"))
+  dir = ObjectContainer(title1=L("oc_title_styles"))
   element = XML.ElementFromURL(makeURL("getSongsByGenre.view", genre=String.Quote(genre), count="50"), cacheTime=CACHE_INTERVAL)
   #add all artists
   for item in searchElementTree(element, "{http://subsonic.org/restapi}song"):
@@ -194,8 +198,8 @@ def getSongsByGenre(genre):
 @route(PREFIX + '/getFolders')
 def getFolders():
   if not serverStatus():
-    return ObjectContainer(header="Can't Connect", message="Check that your username, password and server address are entered correctly.")
-  dir = ObjectContainer(title1="Dossiers")
+    return ObjectContainer(header=L("msg_connect_head"), message=L("msg_connext_body"))
+  dir = ObjectContainer(title1=L("oc_title_folders"))
   element = XML.ElementFromURL(makeURL("getMusicFolders.view"), cacheTime=CACHE_INTERVAL)
   #add all artists
   for item in searchElementTree(element, "{http://subsonic.org/restapi}musicFolder"):
@@ -209,8 +213,8 @@ def getFolders():
 @route(PREFIX + '/getArtistFolder/{folderID}')
 def getArtistFolder(folderID):
   if not serverStatus():
-    return ObjectContainer(header="Can't Connect", message="Check that your username, password and server address are entered correctly.")
-  dir = ObjectContainer(title1="Artists")
+    return ObjectContainer(header=L("msg_connect_head"), message=L("msg_connext_body"))
+  dir = ObjectContainer(title1=L("oc_title_artists"))
   element = XML.ElementFromURL(makeURL("getIndexes.view", musicFolderId=folderID), cacheTime=CACHE_INTERVAL)
   #add all artists
   for item in searchElementTree(element, ARTIST):
@@ -226,8 +230,8 @@ def getArtistFolder(folderID):
 @route(PREFIX + '/getArtists')
 def getArtists():
   if not serverStatus():
-    return ObjectContainer(header="Can't Connect", message="Check that your username, password and server address are entered correctly.")
-  dir = ObjectContainer(title1="Artists")
+    return ObjectContainer(header=L("msg_connect_head"), message=L("msg_connext_body"))
+  dir = ObjectContainer(title1=L("oc_title_artists"))
   element = XML.ElementFromURL(makeURL("getIndexes.view"), cacheTime=CACHE_INTERVAL)
   #add all artists
   for item in searchElementTree(element, ARTIST):
@@ -235,7 +239,7 @@ def getArtists():
     id          = item.get("id")
     key         = PREFIX + '/getArtist/' + id
     artistThumb = PREFIX + '/getArtistThumb/' + id
-    dir.add(ArtistObject(title=title, key=key, thumb=Callback(getArtistThumb, artistID=id)))
+    dir.add(DirectoryObject(title=title, key=key, thumb=Callback(getArtistThumb, artistID=id)))
     #return dir
   return dir
 
@@ -253,6 +257,8 @@ def getArtistThumb(artistID):
 #create a menu with all albums for selected artist
 @route(PREFIX + '/getArtist/{artistID}')
 def getArtist(artistID):
+  if not serverStatus():
+    return ObjectContainer(header=L("msg_connect_head"), message=L("msg_connext_body"))
   element = XML.ElementFromURL(makeURL("getMusicDirectory.view", id=artistID), cacheTime=CACHE_INTERVAL)
   artistName = element.find(DIRECTORY).get("name")
   dir = ObjectContainer(title1=artistName)
@@ -270,16 +276,11 @@ def getArtist(artistID):
     #dir.add(AlbumObject(title=title, key=Callback(getAlbum, albumID=id), rating_key=id, thumb=thumbURL))
   return dir
 
-def getAudioCodec():
-  container = Prefs['format']
-  if container == 'mp3':
-    return AudioCodec.MP3
-  elif container == 'aac':
-    return AudioCodec.AAC
-
 #create a menu with all songs for selected album
 @route(PREFIX + '/getAlbum/{albumID}')
 def getAlbum(albumID):
+  if not serverStatus():
+    return ObjectContainer(header=L("msg_connect_head"), message=L("msg_connext_body"))
   container = Prefs['format']
   if container == 'mp3':
     audio_codec = AudioCodec.MP3
@@ -381,6 +382,6 @@ def serverStatus():
 #Plex calls this functions anytime Prefs are changed
 def ValidatePrefs():
   if Prefs['server'][-1] != '/':
-    return ObjectContainer(header="Check Server Address", message="Server address must end with a slash character ie http://127.0.0.1:8080/")
+    return ObjectContainer(header=L("msg_validate_slash_head"), message=L("msg_validate_slash_body"))
   elif not serverStatus():
-    return ObjectContainer(header="Can't Connect", message="Check that your username, password and server address are entered correctly.")
+    return ObjectContainer(header=L("msg_connect_head"), message=L("msg_connext_body"))

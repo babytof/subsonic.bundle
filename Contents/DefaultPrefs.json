@@ -28,5 +28,15 @@
               "mp3",
               "aac"
       ]
+  },
+  {
+    "id": "language",
+    "label": "Language",
+    "type": "enum",
+    "values": [
+      "English/en",
+      "French/fr"
+    ],
+    "default": "English/en"
   }
 ]
