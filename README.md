@@ -14,5 +14,6 @@ To do list:
 - Search function
 - Shuffle
 - find a way to show a better artist page
+- add pagination + config for list size
 
 *You need Subsonic Premium to use this channel.  It currently costs $1 per month from the Subsonic website (http://www.subsonic.org/pages/premium.jsp).
