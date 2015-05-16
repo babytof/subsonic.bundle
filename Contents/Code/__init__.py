@@ -1,7 +1,7 @@
 
 NAME                    = "Subsonic"
 PREFIX                  = "/music/subsonic"
-CACHE_INTERVAL          = 1
+CACHE_INTERVAL          = 604800
 ART                     = "art-default.png"
 ICON                    = "icon-default.png"
 NOART                   = "noart-default.png"
