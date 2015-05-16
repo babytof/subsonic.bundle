@@ -1,0 +1,22 @@
+Subsonic* is a media streaming server that is similar to Plex, but focuses on music rather than video.  This channel should allow Subsonic streams to be played through Plex.
+ 
+The plugin is available from:
+https://github.com/caveatsCode/subsonic.bundle
+
+To install:
+Download the subsonic.bundle folder from github.  Copy the folder into your Plex plugins folder (you may need to change the name from 'subsonic.bundle-master' to 'subsonic.bundle').  Restart the Plex Media Server.
+When you open the channel in the Plex client of your choice, you will see two options- 'Artists' and 'Preferences'.
+First, go to 'Preferences' to enter your Subsonic server address, username and password.
+Then, you goto 'Artists' to start playing music.
+You should not need to edit any files to get the channel to work- all setup is done within the Plex client.
+
+To do list:
+Improve track loading time (decrease buffer size?)
+Search function
+Scrobble to last.fm
+Shuffle
+Other navigation options besides Artist (such as genre, decade)
+ 
+If you test this channel, please let me know what works and what doesn't work for your setup.
+ 
+*You need Subsonic Premium to use this channel.  It currently costs $1 per month from the Subsonic website (http://www.subsonic.org/pages/premium.jsp).
